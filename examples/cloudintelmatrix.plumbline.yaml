@@ -1,0 +1,11 @@
+# Drop this into CloudIntelMatrix as plumbline.yaml (adjust globs to your layout).
+# Profile 'reference_data' because accuracy IS the product there.
+project_type: reference_data
+schema_pairs:
+  - schema: schema/capability.schema.json      # your v3.16.x schema
+    data: "data/**/*.json"                     # every capability record validates
+data_freshness_paths:
+  - "data/**/*.json"
+data_freshness_days: 120     # PQC/FedRAMP facts older than ~4 months get flagged for re-verification
+llm:
+  enabled: false             # turn on later; deterministic gates come first
