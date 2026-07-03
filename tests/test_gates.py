@@ -3,6 +3,7 @@ from pathlib import Path
 
 from plumbline import config as cfg_mod
 from plumbline.gates import builtin  # noqa: F401
+from plumbline.gates import iac_gates  # noqa: F401
 from plumbline.gates.base import Status, registry
 from plumbline.cli import run_check, run_init
 
@@ -36,7 +37,8 @@ def test_near_empty_file_warns(tmp_path):
 
 
 def test_schema_check_catches_invalid(tmp_path):
-    (tmp_path / "schema").mkdir(); (tmp_path / "data").mkdir()
+    (tmp_path / "schema").mkdir()
+    (tmp_path / "data").mkdir()
     (tmp_path / "schema" / "s.json").write_text(json.dumps({
         "type": "object", "required": ["name"],
         "properties": {"name": {"type": "string"}}}))
@@ -78,3 +80,19 @@ def test_llm_disabled_is_free(tmp_path):
     from plumbline.llm.reviewer import review_changes
     out = review_changes(tmp_path, cfg_mod.Config())
     assert out["reviewed"] == 0 and "disabled" in out["cost_note"]
+
+
+def test_foundry_iac_profile_includes_iac_scan():
+    cfg = cfg_mod.Config(project_type="foundry_iac")
+    gates = cfg.resolved_gates()
+    assert "iac_scan" in gates
+    assert "project_pack" in gates
+    assert "secrets" in gates
+    assert "actions_security" in gates
+    assert "deps_audit" in gates
+
+
+def test_iac_scan_pass_on_no_tf_files(tmp_path):
+    r = registry()["iac_scan"](tmp_path, cfg_mod.Config())
+    assert r.status == Status.PASS
+    assert "no IaC files" in r.detail
