@@ -10,6 +10,7 @@ from pathlib import Path
 
 from plumbline import config as cfg_mod
 from plumbline.gates import builtin  # noqa: F401
+from plumbline.gates import iac_gates  # noqa: F401
 from plumbline.gates.base import Status, registry
 
 TEMPLATES = Path(__file__).parent / "templates"

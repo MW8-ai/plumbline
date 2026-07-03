@@ -3,6 +3,7 @@ from pathlib import Path
 
 from plumbline import config as cfg_mod
 from plumbline.gates import builtin  # noqa: F401
+from plumbline.gates import iac_gates  # noqa: F401
 from plumbline.gates.base import Status, registry
 from plumbline.cli import run_check, run_init
 
@@ -36,7 +37,8 @@ def test_near_empty_file_warns(tmp_path):
 
 
 def test_schema_check_catches_invalid(tmp_path):
-    (tmp_path / "schema").mkdir(); (tmp_path / "data").mkdir()
+    (tmp_path / "schema").mkdir()
+    (tmp_path / "data").mkdir()
     (tmp_path / "schema" / "s.json").write_text(json.dumps({
         "type": "object", "required": ["name"],
         "properties": {"name": {"type": "string"}}}))
@@ -52,6 +54,20 @@ def test_profile_resolution():
     cfg = cfg_mod.Config(project_type="reference_data", skip_gates=["lint"], add_gates=["tests_present"])
     gates = cfg.resolved_gates()
     assert "schema_check" in gates and "lint" not in gates and "tests_present" in gates
+
+
+def test_foundry_iac_profile_includes_iac_scan():
+    cfg = cfg_mod.Config(project_type="foundry_iac")
+    gates = cfg.resolved_gates()
+    assert "iac_scan" in gates
+    assert "project_pack" in gates
+    assert "secrets" in gates
+
+
+def test_iac_scan_pass_on_no_tf_files(tmp_path):
+    r = registry()["iac_scan"](tmp_path, cfg_mod.Config())
+    # No .tf files: gate should PASS (or SKIP if checkov not installed)
+    assert r.status in (Status.PASS, Status.SKIP)
 
 
 def test_tests_present_gate(tmp_path):

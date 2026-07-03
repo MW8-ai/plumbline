@@ -1,6 +1,6 @@
 [project]
 name = "plumbline"
-version = "0.1.0"
+version = "0.2.0"
 description = "Deterministic-first project governance harness. The enforcement arm of Architect's Cornerstone."
 readme = "README.md"
 requires-python = ">=3.11"
