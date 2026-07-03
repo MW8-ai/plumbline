@@ -56,20 +56,6 @@ def test_profile_resolution():
     assert "schema_check" in gates and "lint" not in gates and "tests_present" in gates
 
 
-def test_foundry_iac_profile_includes_iac_scan():
-    cfg = cfg_mod.Config(project_type="foundry_iac")
-    gates = cfg.resolved_gates()
-    assert "iac_scan" in gates
-    assert "project_pack" in gates
-    assert "secrets" in gates
-
-
-def test_iac_scan_pass_on_no_tf_files(tmp_path):
-    r = registry()["iac_scan"](tmp_path, cfg_mod.Config())
-    # No .tf files: gate should PASS (or SKIP if checkov not installed)
-    assert r.status in (Status.PASS, Status.SKIP)
-
-
 def test_tests_present_gate(tmp_path):
     r = registry()["tests_present"](tmp_path, cfg_mod.Config())
     assert r.status == Status.FAIL
@@ -94,3 +80,19 @@ def test_llm_disabled_is_free(tmp_path):
     from plumbline.llm.reviewer import review_changes
     out = review_changes(tmp_path, cfg_mod.Config())
     assert out["reviewed"] == 0 and "disabled" in out["cost_note"]
+
+
+def test_foundry_iac_profile_includes_iac_scan():
+    cfg = cfg_mod.Config(project_type="foundry_iac")
+    gates = cfg.resolved_gates()
+    assert "iac_scan" in gates
+    assert "project_pack" in gates
+    assert "secrets" in gates
+    assert "actions_security" in gates
+    assert "deps_audit" in gates
+
+
+def test_iac_scan_pass_on_no_tf_files(tmp_path):
+    r = registry()["iac_scan"](tmp_path, cfg_mod.Config())
+    assert r.status == Status.PASS
+    assert "no IaC files" in r.detail

@@ -1,4 +1,4 @@
-"""IaC security gate powered by checkov."""
+"""IaC (Infrastructure-as-Code) gate — checkov-based scan."""
 
 from __future__ import annotations
 
@@ -11,66 +11,40 @@ from plumbline.gates.base import Finding, GateResult, Status, register, run_tool
 
 @register("iac_scan")
 def iac_scan(root: Path, cfg: Config) -> GateResult:
-    """Run checkov against any Terraform / Bicep / CloudFormation files in the repo.
-
-    - SKIP politely if checkov is not installed.
-    - FAIL on any HIGH-severity finding.
-    - WARN on lower-severity findings.
-    - PASS when no IaC files are present or checkov reports clean.
-    """
+    tf_files = list(root.rglob("*.tf")) + list(root.rglob("*.bicep"))
+    if not tf_files:
+        return GateResult("iac_scan", Status.PASS, detail="no IaC files found (.tf, .bicep)")
     if not tool_available("checkov"):
         return skip("iac_scan", "checkov", "pip install checkov")
-
-    tf_files = list(root.rglob("*.tf"))
-    bicep_files = list(root.rglob("*.bicep"))
-    cf_files = list(root.rglob("*.template.json")) + list(root.rglob("template.yaml"))
-
-    if not (tf_files or bicep_files or cf_files):
-        return GateResult("iac_scan", Status.PASS, detail="no IaC files found")
-
     proc = run_tool(
-        [
-            "checkov",
-            "--directory", str(root),
-            "--output", "json",
-            "--quiet",
-            "--compact",
-        ],
+        ["checkov", "--directory", str(root), "--output", "json", "--quiet"],
         root,
     )
-
     findings: list[Finding] = []
     try:
-        raw = proc.stdout or "{}"
-        # checkov may emit multiple JSON objects for different frameworks; take the last valid one
-        data: dict = {}
-        for line in raw.splitlines():
-            line = line.strip()
-            if line.startswith("{"):
-                try:
-                    data = json.loads(line)
-                except json.JSONDecodeError:
-                    pass
-        if not data and raw.strip().startswith("{"):
-            data = json.loads(raw)
-
-        failed_checks = data.get("results", {}).get("failed_checks", [])
-        for check in failed_checks:
-            sev = str(check.get("severity") or "medium").lower()
-            check_id = check.get("check_id", "unknown")
-            check_type = check.get("check_type", "")
-            resource = check.get("resource", "")
-            file_path = check.get("file_path", "")
-            location = f"{file_path}:{resource}" if resource else file_path
-            findings.append(Finding(
-                message=f"{check_id} ({check_type}): {check.get('check', check_id)}",
-                location=location,
-                severity="high" if sev in ("high", "critical") else "medium",
-            ))
-    except (json.JSONDecodeError, AttributeError):
+        data = json.loads(proc.stdout or "{}")
+        results = data if isinstance(data, list) else [data]
+        for block in results:
+            for check in block.get("results", {}).get("failed_checks", []):
+                severity = str(check.get("severity") or "medium").lower()
+                check_id = check.get("check_id", "unknown")
+                check_type = check.get("check_type", "")
+                resource = check.get("resource", "")
+                file_path = check.get("repo_file_path") or check.get("file_path") or ""
+                line = check.get("file_line_range", [None])[0]
+                loc = f"{file_path}:{line}" if line else file_path
+                findings.append(Finding(
+                    f"{check_id} ({check_type}): {resource}",
+                    loc,
+                    "high" if severity in ("high", "critical") else "medium",
+                ))
+    except (json.JSONDecodeError, KeyError, TypeError):
         if proc.returncode not in (0, 1):
-            findings.append(Finding("checkov failed to run", str(root), "medium"))
+            findings.append(Finding("checkov produced unexpected output", "", "medium"))
 
     high = any(f.severity in ("high", "critical") for f in findings)
-    status = Status.FAIL if high else (Status.WARN if findings else Status.PASS)
-    return GateResult("iac_scan", status, findings)
+    if high:
+        return GateResult("iac_scan", Status.FAIL, findings)
+    if findings:
+        return GateResult("iac_scan", Status.WARN, findings)
+    return GateResult("iac_scan", Status.PASS)

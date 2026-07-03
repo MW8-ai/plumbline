@@ -2,8 +2,6 @@
 
 | Date | Decision | Alternatives considered | Why |
 |------|----------|------------------------|-----|
-| 2026-07-03 | SHA-pin all GitHub Actions in workflows | Leave tag refs | Tags are mutable; SHA pins prevent supply-chain attacks. zizmor flags unpinned refs. |
-| 2026-07-03 | Add `iac_scan` gate (checkov-based) | semgrep, tfsec | checkov covers Terraform, Bicep, and CloudFormation; skips politely when absent. |
-| 2026-07-03 | Add `foundry_iac` profile | Extend `default` | Keeps profiles composable; foundry repos opt in without affecting other profiles. |
-| 2026-07-03 | Add `.github/copilot-instructions.md` | CLAUDE.md / AGENTS.md | Copilot's equivalent governance file; same rules as sibling repos. |
-| 2026-07-03 | Bump version to 0.2.0 | Stay at 0.1.x | SHA-pinning + new gate is a backwards-compatible feature addition warranting a minor bump. |
+| 2026-07-03 | SHA-pin all GitHub Actions | Keep floating version tags | Floating tags are mutable; pinning to a commit SHA prevents supply-chain attacks where a tag is silently moved to malicious code. Version kept as trailing comment for readability. |
+| 2026-07-03 | Add `iac_scan` gate (checkov-based) | Integrate Terraform linting via tflint | checkov covers multiple IaC formats (Terraform, Bicep) and maps findings to severity levels we already use. Skips politely when checkov is not installed. |
+| 2026-07-03 | Add `foundry_iac` profile | Extend `default` profile | IaC repos have distinct concerns; a dedicated profile avoids bloating the default and makes the intent explicit. |

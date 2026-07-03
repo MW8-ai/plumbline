@@ -22,7 +22,7 @@ jobs:
   gates:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -31,7 +31,11 @@ jobs:
           python-version: "3.12"
       - name: Install harness and scanners
         run: |
-          pip install "plumbline[scanners] @ git+https://github.com/MW8-ai/plumbline@main"
+          if [ "$GITHUB_REPOSITORY" = "MW8-ai/plumbline" ]; then
+            pip install ".[scanners]"
+          else
+            pip install "plumbline[scanners] @ git+https://github.com/MW8-ai/plumbline@main"
+          fi
           curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.21.2/gitleaks_8.21.2_linux_x64.tar.gz \
             | tar -xz -C /usr/local/bin gitleaks
       - name: Restore LLM verdict cache
@@ -43,10 +47,11 @@ jobs:
       - name: Run gates
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LLM_REVIEW: ${{ inputs.llm_review }}
           BASE_REF: ${{ github.base_ref || 'main' }}
         run: |
-          if [ "${{ inputs.llm_review }}" = "true" ]; then
-            plumbline check --llm --base-ref "origin/${BASE_REF}"
+          if [ "$LLM_REVIEW" = "true" ]; then
+            plumbline check --llm --base-ref "origin/$BASE_REF"
           else
             plumbline check
           fi
