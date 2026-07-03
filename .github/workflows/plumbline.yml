@@ -1,0 +1,56 @@
+# Reusable Plumbline gate workflow.
+# In any repo:   uses: MW8-ai/plumbline/.github/workflows/plumbline.yml@v0.1.0
+# Least privilege: read-only token; LLM review needs only a repo secret.
+name: plumbline
+on:
+  workflow_call:
+    inputs:
+      llm_review:
+        type: boolean
+        default: false
+    secrets:
+      ANTHROPIC_API_KEY:
+        required: false
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4    # NOTE: pin to a commit SHA before first release
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install harness and scanners
+        run: |
+          pip install "plumbline[scanners] @ git+https://github.com/MW8-ai/plumbline@main"
+          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.21.2/gitleaks_8.21.2_linux_x64.tar.gz \
+            | tar -xz -C /usr/local/bin gitleaks
+      - name: Restore LLM verdict cache
+        if: inputs.llm_review == true
+        uses: actions/cache@v4
+        with:
+          path: .plumbline/cache
+          key: plumbline-llm-${{ github.repository }}
+      - name: Run gates
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ "${{ inputs.llm_review }}" = "true" ]; then
+            plumbline check --llm --base-ref origin/${{ github.base_ref || 'main' }}
+          else
+            plumbline check
+          fi
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: plumbline-report
+          path: .plumbline/report.*
