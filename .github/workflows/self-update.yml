@@ -6,13 +6,21 @@ on:
     - cron: "0 6 * * 1"
   workflow_dispatch:
 
-permissions:
-  contents: read
-  issues: write
+# Least-privilege baseline: no permissions by default at workflow level.
+permissions: {}
+
+# Prevent concurrent runs so stale checks don't pile up.
+concurrency:
+  group: self-update-check
+  cancel-in-progress: true
 
 jobs:
   freshness:
     runs-on: ubuntu-latest
+    # Scoped to the minimum needed: read source, write issues.
+    permissions:
+      contents: read
+      issues: write
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
