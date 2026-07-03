@@ -18,5 +18,5 @@ env/
 .coverage
 htmlcov/
 
-# Plumbline report output
+# Plumbline report artifacts
 .plumbline/
