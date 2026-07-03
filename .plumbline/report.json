@@ -1,0 +1,313 @@
+{
+  "profile": "api",
+  "results": [
+    {
+      "gate": "project_pack",
+      "status": "pass",
+      "detail": "",
+      "findings": []
+    },
+    {
+      "gate": "secrets",
+      "status": "skip",
+      "detail": "'gitleaks' not installed; skipped. Install: install gitleaks or use the CI workflow",
+      "findings": []
+    },
+    {
+      "gate": "actions_security",
+      "status": "pass",
+      "detail": "",
+      "findings": []
+    },
+    {
+      "gate": "deps_audit",
+      "status": "fail",
+      "detail": "",
+      "findings": [
+        {
+          "message": "certifi==2023.11.17: PYSEC-2024-230",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "certifi==2023.11.17: PYSEC-2024-230",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "configobj==5.0.8: CVE-2023-26112",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "cryptography==41.0.7: PYSEC-2024-225",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "cryptography==41.0.7: PYSEC-2024-225",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "cryptography==41.0.7: PYSEC-2026-35",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "cryptography==41.0.7: PYSEC-2026-35",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "cryptography==41.0.7: CVE-2023-50782",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "cryptography==41.0.7: CVE-2024-0727",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "cryptography==41.0.7: GHSA-h4gh-qq45-vh27",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "cryptography==41.0.7: CVE-2026-26007",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "cryptography==41.0.7: GHSA-537c-gmf6-5ccf",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "idna==3.6: PYSEC-2024-60",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "idna==3.6: PYSEC-2024-60",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "idna==3.6: PYSEC-2026-215",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "jinja2==3.1.2: CVE-2024-22195",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "jinja2==3.1.2: CVE-2024-34064",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "jinja2==3.1.2: CVE-2024-56326",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "jinja2==3.1.2: CVE-2024-56201",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "jinja2==3.1.2: CVE-2025-27516",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "pip==24.0: PYSEC-2026-196",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "pip==24.0: CVE-2025-8869",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "pip==24.0: CVE-2026-1703",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "pip==24.0: CVE-2026-3219",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "pip==24.0: CVE-2026-6357",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "pyasn1==0.4.8: CVE-2026-30922",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "pygments==2.17.2: CVE-2026-4539",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "pyjwt==2.7.0: PYSEC-2026-120",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "pyjwt==2.7.0: PYSEC-2026-120",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "pyjwt==2.7.0: PYSEC-2025-183",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "pyjwt==2.7.0: PYSEC-2026-179",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "pyjwt==2.7.0: PYSEC-2026-175",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "pyjwt==2.7.0: PYSEC-2026-177",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "pyjwt==2.7.0: PYSEC-2026-177",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "pyjwt==2.7.0: PYSEC-2026-179",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "pyopenssl==23.2.0: CVE-2026-27448",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "pyopenssl==23.2.0: CVE-2026-27459",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "requests==2.31.0: CVE-2024-35195",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "requests==2.31.0: CVE-2024-47081",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "requests==2.31.0: CVE-2026-25645",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "setuptools==68.1.2: PYSEC-2025-49",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "setuptools==68.1.2: PYSEC-2025-49",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "setuptools==68.1.2: CVE-2024-6345",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "twisted==24.3.0: PYSEC-2024-75",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "twisted==24.3.0: PYSEC-2026-160",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "twisted==24.3.0: PYSEC-2026-160",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "twisted==24.3.0: CVE-2024-41671",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "urllib3==2.0.7: PYSEC-2026-141",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "urllib3==2.0.7: CVE-2024-37891",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "urllib3==2.0.7: CVE-2025-50181",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "urllib3==2.0.7: CVE-2025-66418",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "urllib3==2.0.7: CVE-2025-66471",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "urllib3==2.0.7: CVE-2026-21441",
+          "location": "python deps",
+          "severity": "high"
+        },
+        {
+          "message": "wheel==0.42.0: CVE-2026-24049",
+          "location": "python deps",
+          "severity": "high"
+        }
+      ]
+    },
+    {
+      "gate": "lint",
+      "status": "pass",
+      "detail": "",
+      "findings": []
+    },
+    {
+      "gate": "tests_present",
+      "status": "pass",
+      "detail": "1 test files",
+      "findings": []
+    }
+  ],
+  "llm": null
+}

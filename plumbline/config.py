@@ -30,6 +30,7 @@ PROFILES: dict[str, list[str]] = {
         "tests_present",
     ],
     "skill": ["project_pack", "ai_pack", "secrets", "lint"],
+    "foundry_iac": ["project_pack", "secrets", "actions_security", "deps_audit", "iac_scan"],
 }
 
 
