@@ -1,0 +1,22 @@
+# Byte-compiled / optimised Python files
+__pycache__/
+*.py[cod]
+*.pyc
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Test / coverage artefacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Plumbline report artifacts
+.plumbline/
