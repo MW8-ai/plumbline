@@ -1,0 +1,14 @@
+# Plumbline policy-as-code. Profiles: default | api | reference_data | agent | skill
+project_type: default
+# add_gates: []
+# skip_gates: []
+# schema_pairs:
+#   - schema: schema/capability.schema.json
+#     data: "data/**/*.json"
+# data_freshness_paths: ["data/**/*.json"]
+# data_freshness_days: 90
+llm:
+  enabled: false            # deterministic gates are always free; opt in to LLM review
+  default_model: claude-haiku-4-5
+  escalation_model: claude-sonnet-4-6
+  max_files_per_run: 20
