@@ -16,11 +16,12 @@ concurrency:
 
 jobs:
   freshness:
+    name: freshness
     runs-on: ubuntu-latest
     # Scoped to the minimum needed: read source, write issues.
     permissions:
-      contents: read
-      issues: write
+      contents: read # to check out the repo and read plumbline.yml
+      issues: write # to file the staleness issue when a scanner pin is behind
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:

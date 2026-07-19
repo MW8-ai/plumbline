@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import tempfile
 import time
 from pathlib import Path
 
@@ -42,15 +43,18 @@ def ai_pack(root: Path, cfg: Config) -> GateResult:
 def secrets(root: Path, cfg: Config) -> GateResult:
     if not tool_available("gitleaks"):
         return skip("secrets", "gitleaks", "install gitleaks or use the CI workflow")
-    proc = run_tool(["gitleaks", "detect", "--no-banner", "--report-format", "json", "--report-path", "/dev/stdout", "--exit-code", "2"], root)
-    if proc.returncode == 0:
-        return GateResult("secrets", Status.PASS)
-    findings = []
-    try:
-        for item in json.loads(proc.stdout or "[]"):
-            findings.append(Finding(f"potential secret: {item.get('RuleID', 'unknown rule')}", f"{item.get('File', '?')}:{item.get('StartLine', '?')}", "critical"))
-    except json.JSONDecodeError:
-        findings.append(Finding("secret scanner reported findings", "", "critical"))
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        report_path = Path(tmp_dir) / "gitleaks-report.json"
+        proc = run_tool(["gitleaks", "detect", "--no-banner", "--report-format", "json", "--report-path", str(report_path), "--exit-code", "2"], root)
+        if proc.returncode == 0:
+            return GateResult("secrets", Status.PASS)
+        findings = []
+        try:
+            report_text = report_path.read_text(encoding="utf-8") if report_path.exists() else "[]"
+            for item in json.loads(report_text or "[]"):
+                findings.append(Finding(f"potential secret: {item.get('RuleID', 'unknown rule')}", f"{item.get('File', '?')}:{item.get('StartLine', '?')}", "critical"))
+        except json.JSONDecodeError:
+            findings.append(Finding("secret scanner reported findings", "", "critical"))
     return GateResult("secrets", Status.FAIL, findings)
 
 
