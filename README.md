@@ -68,3 +68,17 @@ issue and a human decides. Boring on purpose.
 ## License
 
 MIT
+
+<!-- cornerstone-method:start -->
+
+---
+
+<!-- CORNERSTONE-BLOCK:BEGIN (managed by cornerstone-method/scripts/stamp.py - do not edit by hand) -->
+## Part of the Cornerstone Method
+
+**Know → Define → Assess → Shape → Verify → Visualize → Record.** **Plumbline** is the **Verify** verb - Deterministic CI governance harness: gitleaks, zizmor, pip-audit, ruff, schema and file-pack gates, plus an opt-in tiered LLM reviewer.
+
+Siblings: [CloudIntelMatrix (Know)](https://github.com/MW8-ai/CloudIntelMatrix) ([live](https://mw8-ai.github.io/CloudIntelMatrix/)) · Architect's Cornerstone (Define) · Architecture Review Framework + Review Skill (Assess) · [Formwork (Shape)](https://github.com/MW8-ai/formwork) · [Architecture Anatomy (Visualize)](https://github.com/MW8-ai/architecture-anatomy) ([live](https://mw8-ai.github.io/architecture-anatomy/)) · Ledger (Record)
+
+Hub: [The Cornerstone Method](https://github.com/MW8-ai/cornerstone-method)
+<!-- CORNERSTONE-BLOCK:END -->
