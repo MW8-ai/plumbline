@@ -1,0 +1,82 @@
+{
+  "meta": {
+    "title": "test estate",
+    "scopes": [
+      {
+        "id": "NIST",
+        "t": "NIST 800-53",
+        "c": "#4a90d9"
+      },
+      {
+        "id": "GOV",
+        "t": "Governance: failing gates",
+        "c": "#e05252"
+      }
+    ],
+    "governance": {
+      "generatedBy": "plumbline_to_anatomy",
+      "asOf": "2026-07-03T05:05:07+00:00",
+      "sources": [
+        "cloudintelmatrix",
+        "plumbline"
+      ],
+      "annotated": 2,
+      "failing": [
+        "cim-api"
+      ]
+    }
+  },
+  "nodes": [
+    {
+      "id": "plumbline-ci",
+      "t": "Plumbline CI",
+      "zone": "devops",
+      "scopes": [
+        "NIST"
+      ],
+      "gov": {
+        "status": "pass",
+        "fails": 0,
+        "warns": 0,
+        "gates": {
+          "project_pack": "pass",
+          "secrets": "pass"
+        },
+        "source": "plumbline",
+        "asOf": "2026-07-03T05:05:07+00:00"
+      }
+    },
+    {
+      "id": "cim-api",
+      "t": "CloudIntelMatrix",
+      "zone": "apps",
+      "gov": {
+        "status": "fail",
+        "fails": 1,
+        "warns": 1,
+        "gates": {
+          "schema_check": "fail",
+          "lint": "warn"
+        },
+        "source": "cloudintelmatrix",
+        "asOf": "2026-07-03T05:05:07+00:00"
+      },
+      "scopes": [
+        "GOV"
+      ]
+    },
+    {
+      "id": "foundry-base",
+      "t": "AI Foundry",
+      "zone": "azure"
+    }
+  ],
+  "edges": [
+    {
+      "from": "cim-api",
+      "to": "foundry-base",
+      "proto": "HTTPS",
+      "port": 443
+    }
+  ]
+}
