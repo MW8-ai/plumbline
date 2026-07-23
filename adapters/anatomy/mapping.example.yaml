@@ -1,0 +1,6 @@
+# Links Plumbline report sources (repos/systems) to Anatomy catalog node ids.
+# One report can annotate several nodes (a repo that IS several components).
+map:
+  plumbline: [plumbline-ci]
+  cloudintelmatrix: [cim-api, cim-data]
+  formwork: [foundry-base]
