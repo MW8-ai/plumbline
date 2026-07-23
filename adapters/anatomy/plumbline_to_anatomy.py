@@ -56,7 +56,7 @@ def load_reports(pairs: list[str]) -> dict[str, dict]:
         name, _, path = pair.partition(":")
         if not path:
             sys.exit(f"--report must be name:path, got '{pair}'")
-        reports[name] = json.loads(Path(path).read_text())
+        reports[name] = json.loads(Path(path).read_text(encoding="utf-8"))
     return reports
 
 
@@ -75,7 +75,13 @@ def summarize(report: dict) -> dict:
 
 def annotate(catalog: dict, mapping: dict, reports: dict[str, dict]) -> dict:
     out = copy.deepcopy(catalog)
-    nodes = {n["id"]: n for n in out.get("nodes", []) if "id" in n}
+    # Anatomy's real catalog format keys nodes by id ({id: node}); the early
+    # sample used a list of {id, ...}. Accept both.
+    raw_nodes = out.get("nodes") or {}
+    if isinstance(raw_nodes, dict):
+        nodes = raw_nodes
+    else:
+        nodes = {n["id"]: n for n in raw_nodes if isinstance(n, dict) and "id" in n}
     as_of = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
     failing_nodes: list[str] = []
@@ -132,12 +138,14 @@ def main() -> int:
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
 
-    catalog = json.loads(Path(args.catalog).read_text())
-    mapping = yaml.safe_load(Path(args.mapping).read_text()) or {}
+    catalog = json.loads(Path(args.catalog).read_text(encoding="utf-8"))
+    mapping = yaml.safe_load(Path(args.mapping).read_text(encoding="utf-8")) or {}
     reports = load_reports(args.report)
 
     annotated = annotate(catalog, mapping, reports)
-    Path(args.out).write_text(json.dumps(annotated, indent=2))
+    Path(args.out).write_text(
+        json.dumps(annotated, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
     gov = annotated["meta"]["governance"]
     print(f"annotated {gov['annotated']} node(s); failing: {gov['failing'] or 'none'}")
     print(f"wrote {args.out}")
