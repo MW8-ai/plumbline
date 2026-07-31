@@ -5,7 +5,7 @@ description = "Deterministic-first project governance harness. The enforcement a
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
-dependencies = ["pyyaml>=6.0"]
+dependencies = ["pyyaml>=6.0.3"]
 
 [project.optional-dependencies]
 scanners = ["zizmor>=1.0", "pip-audit>=2.10.1", "ruff>=0.6", "jsonschema>=4.26.0"]
