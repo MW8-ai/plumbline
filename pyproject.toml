@@ -8,8 +8,8 @@ license = { text = "MIT" }
 dependencies = ["pyyaml>=6.0.3"]
 
 [project.optional-dependencies]
-scanners = ["zizmor>=1.29.0", "pip-audit>=2.10.1", "ruff>=0.16.2", "jsonschema>=4.26.0"]
-llm = ["anthropic>=0.120.2"]
+scanners = ["zizmor>=1.29.0", "pip-audit>=2.10.1", "ruff>=0.16.1", "jsonschema>=4.26.0"]
+llm = ["anthropic>=0.121.0"]
 dev = ["pytest>=9.1.1"]
 
 [project.scripts]
